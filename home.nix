@@ -4,6 +4,7 @@ let
   dotfiles = "${config.home.homeDirectory}/nixos-dots/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   configs = {
+    niri = "niri";
   };
 in
 
@@ -32,11 +33,10 @@ in
     fuzzel
   ];
 
- # xdg.configFile = builtins.mapAttrs 
-  #  (name: subpath: {
-  #    source = create_symlink "${dotfiles}/${subpath}";
-   #   recursive = true;
-   # })
-   # configs;
+  xdg.configFile = builtins.mapAttrs 
+    (name: subpath: {
+      source = create_symlink "${dotfiles}/${subpath}";
+   })
+   configs;
 
 }
