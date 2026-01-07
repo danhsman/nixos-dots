@@ -1,53 +1,67 @@
-{ pkgs, ... }: 
+{ pkgs, ... }:
 {
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
     vimAlias = true;
-    viAlias = true; 
+    viAlias = true;
 
     globals.mapleader = " ";
-    
+
     colorschemes.kanagawa = {
       enable = true;
       settings = {
-        theme = "dragon"; 
-      
+        theme = "dragon";
+
         background = {
           dark = "dragon";
           light = "lotus";
         };
+        overrides = ''
+          function(colors)
+            local theme = colors.theme
+            return {
+              Pmenu = { fg = theme.ui.shade0, bg = "NONE" },
+              
+              PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+              
+              FloatBorder = { fg = theme.ui.shade0, bg = "NONE" },
+              
+              NormalFloat = { bg = "NONE" },
+            }
+          end
+        '';
       };
     };
-    
+
     colorscheme = "kanagawa";
-    
+
     opts = {
-       wrap = false;
-       clipboard = "unnamedplus";
-       termguicolors = true;
-       completeopt = "menuone,noselect";
-       updatetime = 300;
-       
-       #tab settings
-       shiftwidth = 2;
-       tabstop = 2;
-       softtabstop = 2;
-       expandtab = true;
-       shiftround = true;
-       smartindent = true;
+      wrap = false;
+      clipboard = "unnamedplus";
+      termguicolors = true;
+      completeopt = "menuone,noselect";
+      updatetime = 300;
 
-       #line numbers
-       number = true;
-       relativenumber = true;
-       cursorline = true;
-       signcolumn = "yes";
+      #tab settings
+      shiftwidth = 2;
+      tabstop = 2;
+      softtabstop = 2;
+      expandtab = true;
+      shiftround = true;
+      smartindent = true;
 
-       #search
-       ignorecase = true;
-       smartcase = true;
-       incsearch = true;
-       hlsearch = true;
+      #line numbers
+      number = true;
+      relativenumber = true;
+      cursorline = true;
+      signcolumn = "yes";
+
+      #search
+      ignorecase = true;
+      smartcase = true;
+      incsearch = true;
+      hlsearch = true;
 
       #swap
       swapfile = false;
@@ -109,9 +123,110 @@
 
     ];
 
+    autoCmd = [
+      {
+        event = [ "BufWritePost" "BufEnter" "InsertLeave" ];
+        callback = {
+          __raw = ''
+            function()
+              require('lint').try_lint()
+            end
+          '';
+        };
+      }
+    ];
 
     plugins = {
-      
+      treesitter = {
+        enable = true;
+        settings = {
+          highlight.enable = true;
+          indent.enable = true;
+
+          ensure_installed = [
+            "bash"
+            "c"
+            "cpp"
+            "css"
+            "html"
+            "javascript"
+            "json"
+            "lua"
+            "markdown"
+            "nix"
+            "python"
+            "rust"
+            "toml"
+            "yaml"
+          ];
+        };
+      };
+
+      nvim-autopairs = {
+        enable = true;
+        settings = {
+          check_ts = true;
+        };
+      };
+
+      luasnip.enable = true;
+
+      cmp = {
+        enable = true;
+        autoEnableSources = true;
+
+        settings = {
+          snippet.expand = "function(args) require('luasnip').lsp_expand(args.body) end";
+          sources = [
+            { name = "nvim_lsp"; }
+            { name = "luasnip"; }
+            { name = "path"; }
+            { name = "buffer"; }
+          ];
+          mapping = {
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+            "<C-f>" = "cmp.mapping.scroll_docs(4)";
+            "<C-e>" = "cmp.mapping.close()";
+
+            "<CR>" = "cmp.mapping.confirm({ select = true })";
+
+            "<Tab>" = "cmp.mapping.select_next_item()";
+            "<S-Tab>" = "cmp.mapping.select_prev_item()";
+          };
+          window = {
+            completion.border = "rounded";
+            documentation.border = "rounded";
+          };
+        };
+      };
+
+      conform-nvim = {
+        enable = true;
+        settings = {
+          format_on_save = {
+            lsp_fallback = true;
+            timeout_ms = 500;
+          };
+          formatters_by_ft = {
+            nix = [ "nixpkgs_fmt" ];
+            python = [ "isort" "black" ];
+            rust = [ "rustfmt" ];
+            c = [ "clang_format" ];
+            "_" = [ "trim_whitespace" ];
+          };
+        };
+      };
+
+      lint = {
+        enable = true;
+        lintersByFt = {
+          nix = [ "statix" ];
+          c = [ "cpplint" ];
+          python = [ "pylint" ];
+        };
+      };
+
       gitsigns = {
         enable = true;
         settings = {
@@ -149,13 +264,22 @@
         servers = {
           lua_ls.enable = true;
           nixd.enable = true;
+          clangd.enable = true;
+          qmlls = {
+            enable = true;
+          };
+          rust_analyzer = {
+            enable = true;
+            installCargo = false;
+            installRustc = false;
+          };
         };
       };
-      
+
       web-devicons = {
         enable = true;
       };
-      
+
       telescope = {
         enable = true;
         extensions."fzf-native" = {

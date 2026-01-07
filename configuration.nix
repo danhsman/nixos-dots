@@ -31,6 +31,9 @@
   services.displayManager.ly.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
 
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+
   networking.networkmanager.enable = true;
   
   environment.sessionVariables.NIXOS_OZONE_WL = "1";

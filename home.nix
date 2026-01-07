@@ -1,9 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 let
   dotfiles = "${config.home.homeDirectory}/nixos-dots/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   configs = {
+    quickshell = "quickshell";
     niri = "niri";
   };
 in
@@ -21,22 +22,39 @@ in
   };
   home.packages = with pkgs; [
     foot
+    fuzzel
+    quickshell
+    kdePackages.qtdeclarative
     floorp-bin
     lazygit
     fastfetch
     git
     ripgrep
     nil
-    nixpkgs-fmt
     nodejs
     gcc
-    fuzzel
+    rustc
+    cargo
+    rust-analyzer
+
+    #Linters
+    statix
+    cpplint
+    pylint
+    bacon
+
+    #Formatters
+    nixpkgs-fmt
+    black
+    isort
+    rustfmt
+    clang-tools
   ];
 
-  xdg.configFile = builtins.mapAttrs 
+  xdg.configFile = builtins.mapAttrs
     (name: subpath: {
       source = create_symlink "${dotfiles}/${subpath}";
-   })
-   configs;
+    })
+    configs;
 
 }
