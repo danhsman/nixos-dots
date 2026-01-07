@@ -21,9 +21,7 @@ in
   };
   home.packages = with pkgs; [
     foot
-    gearlever
     floorp-bin
-    firefox
     lazygit
     fastfetch
     git
