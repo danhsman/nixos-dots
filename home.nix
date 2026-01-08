@@ -36,6 +36,7 @@ in
     rustc
     cargo
     rust-analyzer
+    capitaine-cursors
 
     #Linters
     statix
@@ -50,6 +51,15 @@ in
     rustfmt
     clang-tools
   ];
+
+  home.pointerCursor = {
+    name = "capitaine-cursors";
+    package = pkgs.capitaine-cursors;
+    size = 48;
+
+    gtk.enable = true;
+    x11.enable = true;
+  };
 
   xdg.configFile = builtins.mapAttrs
     (name: subpath: {
