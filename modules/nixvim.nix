@@ -169,6 +169,7 @@
         };
       };
 
+      plugins.direnv.enable = true;
       luasnip.enable = true;
 
       cmp = {

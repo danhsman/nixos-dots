@@ -7,6 +7,7 @@ let
     quickshell = "quickshell";
     niri = "niri";
   };
+  src = "~/nixos-dots/Wallpapers/tplt.png";
 in
 
 {
@@ -21,35 +22,22 @@ in
     };
   };
   home.packages = with pkgs; [
+    tree
     foot
     fuzzel
     quickshell
     kdePackages.qtdeclarative
     floorp-bin
     lazygit
+    statix
     fastfetch
     git
     ripgrep
     nil
     nodejs
     gcc
-    rustc
-    cargo
-    rust-analyzer
     capitaine-cursors
-
-    #Linters
-    statix
-    cpplint
-    pylint
-    bacon
-
-    #Formatters
     nixpkgs-fmt
-    black
-    isort
-    rustfmt
-    clang-tools
   ];
 
   home.pointerCursor = {
@@ -61,10 +49,30 @@ in
     x11.enable = true;
   };
 
-  xdg.configFile = builtins.mapAttrs
+  xdg.configFile = (builtins.mapAttrs
     (name: subpath: {
       source = create_symlink "${dotfiles}/${subpath}";
     })
-    configs;
+    configs) // {
+    # We merge the new file definition here using '//'
+    "direnv/direnv.toml".text = ''
+      [global]
+      hide_env_diff = true
+    '';
+  };
+
+  services.wpaperd = {
+    enable = true;
+    settings = {
+      eDP-1 = {
+        path = src;
+      };
+    };
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 
 }

@@ -3,15 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs"; 
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
   };
@@ -33,13 +33,27 @@
                 ./modules/nixvim.nix
                 ./modules/git.nix
               ];
-        };
+            };
 
             backupFileExtension = "backup";
 
           };
         }
       ];
+    };
+    templates = {
+      c = {
+        path = ./templates/c;
+        description = "C/C++ development environment";
+      };
+      python = {
+        path = ./templates/python;
+        description = "Python development environment";
+      };
+      rust = {
+        path = ./templates/rust;
+        description = "Rust development environment";
+      };
     };
   };
 }
