@@ -55,7 +55,7 @@ in
   home.pointerCursor = {
     name = "capitaine-cursors";
     package = pkgs.capitaine-cursors;
-    size = 48;
+    size = 28;
 
     gtk.enable = true;
     x11.enable = true;

@@ -112,7 +112,7 @@ hotkey-overlay {
 
 cursor {
   xcursor-theme "capitaine-cursors"
-  xcursor-size 48
+  xcursor-size 28
 }
 
 prefer-no-csd
