@@ -2,7 +2,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -31,11 +32,8 @@
   services.displayManager.ly.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
 
-  services.upower.enable = true;
-  services.power-profiles-daemon.enable = true;
-
   networking.networkmanager.enable = true;
-  
+
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   programs.niri.enable = true;
@@ -64,7 +62,7 @@
     isNormalUser = true;
     description = "danhs";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [ ];
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -83,15 +81,15 @@
 
 
 
-  services.xserver.videoDrivers = ["nvidia"];
-  
+  services.xserver.videoDrivers = [ "nvidia" ];
+
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
     package = config.boot.kernelPackages.nvidiaPackages.latest;
     prime = {
-     	intelBusId = "PCI:0:2:0";
-	    nvidiaBusId = "PCI:2:0:0";
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:2:0:0";
 
     };
   };
@@ -102,7 +100,7 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
-    security.rtkit.enable = true;
+  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
