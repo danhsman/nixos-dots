@@ -16,44 +16,20 @@
 
   };
 
-  outputs = { self, nixpkgs, home-manager, nixvim, ... }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    let
       system = "x86_64-linux";
-      modules = [
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users.danhs = { pkgs, ... }: {
-              imports = [
-                nixvim.homeModules.nixvim
-                ./home.nix
-                ./modules/nixvim.nix
-                ./modules/git.nix
-              ];
-            };
-
-            backupFileExtension = "backup";
-
-          };
-        }
-      ];
-    };
-    templates = {
-      c = {
-        path = ./templates/c;
-        description = "C/C++ development environment";
-      };
-      python = {
-        path = ./templates/python;
-        description = "Python development environment";
-      };
-      rust = {
-        path = ./templates/rust;
-        description = "Rust development environment";
+      username = "danhs";
+    in
+    {
+      nixosConfigurations = {
+        legion5 = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs username; };
+          modules = [
+            ./system/legion5/default.nix
+          ];
+        };
       };
     };
-  };
 }
