@@ -20,6 +20,6 @@ nixos-dots/
 ├── modules/
 │   ├── core/             # System modules (Nvidia, Pipewire, Users)
 │   └── home/             # User modules (Niri, Git, Foot, Neovim)
-└── templates/            # Flake templates for DevShellsixOS flake setup
+└── templates/            # Flake templates for DevShell flake setup
 
 
