@@ -8,6 +8,7 @@
     floorp-bin
     capitaine-cursors
 
+    yazi
     tree
     lazygit
     statix
@@ -18,5 +19,25 @@
     nil
     nodejs
     gcc
+    gnumake
+    cmake
+    gdb
+    valgrind
+    clang-tools
+    cpplint
+
+    python
+    black
+    isort
+    pylint
+    pyright
+
+    cargo
+    rustc
+    rust-analyzer
+    rustfmt
+    clippy
+    pkg-config
+    openssl
   ];
 }
