@@ -26,7 +26,7 @@
     clang-tools
     cpplint
 
-    python
+    python3
     black
     isort
     pylint
@@ -39,5 +39,8 @@
     clippy
     pkg-config
     openssl
+
+
+    nur.repos.Ev357.helium
   ];
 }

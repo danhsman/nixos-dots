@@ -23,6 +23,9 @@
   };
 
   home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+
     extraSpecialArgs = { inherit inputs; };
     users.danhs = {
       imports = [ ../../modules/home/default.nix ];

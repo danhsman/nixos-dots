@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -28,6 +33,9 @@
           specialArgs = { inherit inputs username; };
           modules = [
             ./system/legion5/default.nix
+            ({ pkgs, ... }: {
+              nixpkgs.overlays = [ inputs.nur.overlays.default ];
+            })
           ];
         };
       };
