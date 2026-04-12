@@ -9,10 +9,10 @@
 static const int sloppyfocus               = 1;
 static const int bypass_surface_visibility = 0;
 static const unsigned int borderpx         = 2;
-static const float rootcolor[]             = COLOR(0x161616ff); /* oxocarbon base */
+static const float rootcolor[]             = COLOR(0x161616ff);
 static const float bordercolor[]           = COLOR(0x393939ff);
-static const float focuscolor[]            = COLOR(0xbe95c4ff); /* oxocarbon purple */
-static const float urgentcolor[]           = COLOR(0xff7eb6ff); /* pink accent */
+static const float focuscolor[]            = COLOR(0xbe95c4ff);
+static const float urgentcolor[]           = COLOR(0xff7eb6ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
 
 /* tagging */
@@ -52,7 +52,7 @@ static const int repeat_delay = 600;
 static const int tap_to_click            = 1;
 static const int tap_and_drag            = 1;
 static const int drag_lock               = 1;
-static const int natural_scrolling       = 1; /* feels better on laptop */
+static const int natural_scrolling       = 1;
 static const int disable_while_typing    = 1;
 static const int left_handed             = 0;
 static const int middle_button_emulation = 0;
@@ -66,10 +66,10 @@ static const enum libinput_config_tap_button_map button_map    = LIBINPUT_CONFIG
 #define MODKEY WLR_MODIFIER_LOGO
 
 #define TAGKEYS(KEY,SKEY,TAG) \
-    { MODKEY,                                KEY,  view,       {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_CTRL,              KEY,  toggleview, {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_SHIFT,             SKEY, tag,        {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT, SKEY, toggletag, {.ui = 1 << TAG} }
+    { MODKEY,                                      KEY,  view,       {.ui = 1 << TAG} }, \
+    { MODKEY|WLR_MODIFIER_CTRL,                    KEY,  toggleview, {.ui = 1 << TAG} }, \
+    { MODKEY|WLR_MODIFIER_SHIFT,                   SKEY, tag,        {.ui = 1 << TAG} }, \
+    { MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT, SKEY, toggletag,  {.ui = 1 << TAG} }
 
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
@@ -77,12 +77,12 @@ static const enum libinput_config_tap_button_map button_map    = LIBINPUT_CONFIG
 static const char *termcmd[]    = { "foot", NULL };
 static const char *menucmd[]    = { "rofi", "-show", "drun", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
-static const char *up_vol[]     = { "wpctl", "set-volume", "@DEFAULT_SINK@", "+5%",    NULL };
-static const char *down_vol[]   = { "wpctl", "set-volumee", "@DEFAULT_SINK@", "-5%",    NULL };
-static const char *mute_vol[]   = { "wpctl", "set-mute",   "@DEFAULT_SINK@", "toggle", NULL };
-//static const char *briup[]      = { "brightnessctl", "set", "5%+", NULL };
-//static const char *bridown[]    = { "brightnessctl", "set", "5%-", NULL };
-//static const char *screenshot[] = { "sh", "-c", "grim -g \"$(slurp)\" - | satty --filename -", NULL };
+static const char *up_vol[]     = { "wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%+",    NULL };
+static const char *down_vol[]   = { "wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-",    NULL };
+static const char *mute_vol[]   = { "wpctl", "set-mute",   "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
+static const char *briup[]      = { "brightnessctl", "set", "5%+", NULL };
+static const char *bridown[]    = { "brightnessctl", "set", "5%-", NULL };
+static const char *screenshot[] = { "sh", "-c", "grim -g \"$(slurp)\" - | satty --filename -", NULL };
 
 static const Key keys[] = {
     { MODKEY,                    XKB_KEY_Return,      spawn,            {.v = termcmd} },
@@ -131,11 +131,7 @@ static const Key keys[] = {
     TAGKEYS(XKB_KEY_9, XKB_KEY_parenleft,   8),
 
     { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_E, quit, {0} },
-
     { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_Terminate_Server, quit, {0} },
-#define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
-    CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
-    CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
 };
 
 static const Button buttons[] = {
