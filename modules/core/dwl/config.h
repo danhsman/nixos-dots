@@ -36,7 +36,7 @@ static const Layout layouts[] = {
 
 /* monitors */
 static const MonitorRule monrules[] = {
-    { NULL, 0.55f, 1, 1, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1 },
+    { NULL, 0.55f, 1, 1.66, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1 },
 };
 
 /* keyboard */
@@ -52,7 +52,7 @@ static const int repeat_delay = 600;
 static const int tap_to_click            = 1;
 static const int tap_and_drag            = 1;
 static const int drag_lock               = 1;
-static const int natural_scrolling       = 1;
+static const int natural_scrolling       = 0;
 static const int disable_while_typing    = 1;
 static const int left_handed             = 0;
 static const int middle_button_emulation = 0;
@@ -98,7 +98,7 @@ static const Key keys[] = {
     { MODKEY,                    XKB_KEY_l,           setmfact,         {.f = +0.05f} },
     { MODKEY,                    XKB_KEY_space,       zoom,             {0} },
     { MODKEY,                    XKB_KEY_Tab,         view,             {0} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,           killclient,       {0} },
+    { MODKEY,                    XKB_KEY_Q,           killclient,       {0} },
 
     { MODKEY,                    XKB_KEY_t,           setlayout,        {.v = &layouts[0]} },
     { MODKEY,                    XKB_KEY_n,           setlayout,        {.v = &layouts[1]} },

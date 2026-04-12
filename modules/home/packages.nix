@@ -3,10 +3,8 @@
 {
   home.packages = with pkgs; [
     fuzzel
-    quickshell
-    kdePackages.qtdeclarative
-    floorp-bin
     capitaine-cursors
+    rofi
 
     yazi
     tree
