@@ -15,12 +15,12 @@
 
   networking.hostName = "nixos";
 
-  boot.supportedFilesystems = [ "ntfs" ];
-  fileSystems."/home/danhs/Drives/Windows" = {
-    device = "/dev/nvme0n1p3";
-    fsType = "ntfs-3g";
-    options = [ "rw" "uid=1000" ];
-  };
+  #  boot.supportedFilesystems = [ "ntfs" ];
+  #  fileSystems."/home/danhs/Drives/Windows" = {
+  #    device = "/dev/nvme0n1p3";
+  #    fsType = "ntfs-3g";
+  #    options = [ "rw" "uid=1000" ];
+  #  };
 
   home-manager = {
     useGlobalPkgs = true;
