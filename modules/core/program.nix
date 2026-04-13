@@ -18,11 +18,14 @@
       patches = [ ./dwl/patches/bar.patch ];
     });
     extraSessionCommands = ''
-      export XCURSOR_THEME=macOS
-      export XCURSOR_SIZE=14
       export CHROMIUM_FLAGS="--ozone-platform=wayland --enable-features=WaylandWindowDecorations"
       export OZONE_PLATFORM=wayland
     '';
+  };
+
+  environment.sessionVariables = {
+    XCURSOR_THEME = "macOS";
+    XCURSOR_SIZE = "21";
   };
 
   xdg.portal = {
