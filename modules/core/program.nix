@@ -25,7 +25,7 @@
 
   environment.sessionVariables = {
     XCURSOR_THEME = "macOS";
-    XCURSOR_SIZE = "21";
+    XCURSOR_SIZE = "16";
   };
 
   xdg.portal = {

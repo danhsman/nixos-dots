@@ -3,7 +3,7 @@
   home.pointerCursor = {
     name = "macOS";
     package = pkgs.apple-cursor;
-    size = 21;
+    size = 16;
     gtk.enable = true;
   };
 }
