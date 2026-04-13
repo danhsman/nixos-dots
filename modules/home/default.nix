@@ -3,6 +3,7 @@
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
+    ./cursor.nix
     ./wallpaper.nix
     ./packages.nix
     ./niri.nix

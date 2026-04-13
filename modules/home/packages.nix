@@ -3,8 +3,9 @@
 {
   home.packages = with pkgs; [
     fuzzel
-    capitaine-cursors
+    apple-cursor
     rofi
+    somebar
 
     yazi
     tree

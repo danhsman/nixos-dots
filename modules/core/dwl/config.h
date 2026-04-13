@@ -1,19 +1,35 @@
 #include <X11/XF86keysym.h>
 
 /* Taken from https://github.com/djpohly/dwl/issues/466 */
-#define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
-                        ((hex >> 16) & 0xFF) / 255.0f, \
-                        ((hex >> 8) & 0xFF) / 255.0f, \
-                        (hex & 0xFF) / 255.0f }
+#define COLOR(hex)                                                             \
+  {((hex >> 24) & 0xFF) / 255.0f, ((hex >> 16) & 0xFF) / 255.0f,               \
+   ((hex >> 8) & 0xFF) / 255.0f, (hex & 0xFF) / 255.0f}
+
+/* bar colors */
+static uint32_t colors[][3] = {
+    /*               fg          bg          border    */
+    [SchemeNorm] = {0xb3b1adff, 0x161616ff, 0x393939ff},
+    [SchemeSel] = {0xbe95c4ff, 0x262626ff, 0xbe95c4ff},
+    [SchemeUrg] = {0x161616ff, 0xff7eb6ff, 0xff7eb6ff},
+};
+
+/* bar */
+static const int showbar = 1;
+static const int topbar = 1;
+static const char *fonts[] = {"JetBrainsMono Nerd Font:size=12"};
+
+/* tags */
+static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
 /* appearance */
-static const int sloppyfocus               = 1;
+static const int sloppyfocus = 1;
 static const int bypass_surface_visibility = 0;
-static const unsigned int borderpx         = 2;
-static const float rootcolor[]             = COLOR(0x161616ff);
-static const float bordercolor[]           = COLOR(0x393939ff);
-static const float focuscolor[]            = COLOR(0xbe95c4ff);
-static const float urgentcolor[]           = COLOR(0xff7eb6ff);
-static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
+static const unsigned int borderpx = 2;
+static const float rootcolor[] = COLOR(0x161616ff);
+static const float bordercolor[] = COLOR(0x393939ff);
+static const float focuscolor[] = COLOR(0xbe95c4ff);
+static const float urgentcolor[] = COLOR(0xff7eb6ff);
+static const float fullscreen_bg[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 /* tagging */
 #define TAGCOUNT (9)
@@ -23,119 +39,143 @@ static int log_level = WLR_ERROR;
 
 static const Rule rules[] = {
     /* app_id         title   tags mask   isfloating   monitor */
-    { "pavucontrol",  NULL,   0,          1,           -1 },
-    { "nm-applet",    NULL,   0,          1,           -1 },
+    {"pavucontrol", NULL, 0, 1, -1},
+    {"nm-applet", NULL, 0, 1, -1},
 };
 
 /* layouts */
 static const Layout layouts[] = {
-    { "[]=",  tile },
-    { "><>",  NULL },
-    { "[M]",  monocle },
+    {"[]=", tile},
+    {"><>", NULL},
+    {"[M]", monocle},
 };
 
 /* monitors */
 static const MonitorRule monrules[] = {
-    { NULL, 0.55f, 1, 1.66, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1 },
+    {NULL, 0.55f, 1, 1.66, &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1},
 };
 
 /* keyboard */
 static const struct xkb_rule_names xkb_rules = {
-    .layout  = "us,gr",
+    .layout = "us,gr",
     .options = "grp:alt_shift_toggle",
 };
 
-static const int repeat_rate  = 25;
+static const int repeat_rate = 25;
 static const int repeat_delay = 600;
 
 /* Trackpad */
-static const int tap_to_click            = 1;
-static const int tap_and_drag            = 1;
-static const int drag_lock               = 1;
-static const int natural_scrolling       = 0;
-static const int disable_while_typing    = 1;
-static const int left_handed             = 0;
+static const int tap_to_click = 1;
+static const int tap_and_drag = 1;
+static const int drag_lock = 1;
+static const int natural_scrolling = 0;
+static const int disable_while_typing = 1;
+static const int left_handed = 0;
 static const int middle_button_emulation = 0;
-static const enum libinput_config_scroll_method scroll_method  = LIBINPUT_CONFIG_SCROLL_2FG;
-static const enum libinput_config_click_method  click_method   = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
-static const uint32_t send_events_mode                         = LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
-static const enum libinput_config_accel_profile accel_profile  = LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
-static const double accel_speed                                = 0.0;
-static const enum libinput_config_tap_button_map button_map    = LIBINPUT_CONFIG_TAP_MAP_LRM;
+static const enum libinput_config_scroll_method scroll_method =
+    LIBINPUT_CONFIG_SCROLL_2FG;
+static const enum libinput_config_click_method click_method =
+    LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+static const uint32_t send_events_mode = LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+static const enum libinput_config_accel_profile accel_profile =
+    LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
+static const double accel_speed = 0.0;
+static const enum libinput_config_tap_button_map button_map =
+    LIBINPUT_CONFIG_TAP_MAP_LRM;
 
 #define MODKEY WLR_MODIFIER_LOGO
 
-#define TAGKEYS(KEY,SKEY,TAG) \
-    { MODKEY,                                      KEY,  view,       {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_CTRL,                    KEY,  toggleview, {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_SHIFT,                   SKEY, tag,        {.ui = 1 << TAG} }, \
-    { MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT, SKEY, toggletag,  {.ui = 1 << TAG} }
+#define TAGKEYS(KEY, SKEY, TAG)                                                \
+  {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
+      {MODKEY | WLR_MODIFIER_CTRL, KEY, toggleview, {.ui = 1 << TAG}},         \
+      {MODKEY | WLR_MODIFIER_SHIFT, SKEY, tag, {.ui = 1 << TAG}}, {            \
+    MODKEY | WLR_MODIFIER_CTRL | WLR_MODIFIER_SHIFT, SKEY, toggletag, {        \
+      .ui = 1 << TAG                                                           \
+    }                                                                          \
+  }
 
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define SHCMD(cmd)                                                             \
+  {                                                                            \
+    .v = (const char *[]) { "/bin/sh", "-c", cmd, NULL }                       \
+  }
 
 /* commands */
-static const char *termcmd[]    = { "foot", NULL };
-static const char *menucmd[]    = { "rofi", "-show", "drun", NULL };
-static const char *browsercmd[] = { "firefox", NULL };
-static const char *up_vol[]     = { "wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%+",    NULL };
-static const char *down_vol[]   = { "wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "5%-",    NULL };
-static const char *mute_vol[]   = { "wpctl", "set-mute",   "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
-static const char *briup[]      = { "brightnessctl", "set", "5%+", NULL };
-static const char *bridown[]    = { "brightnessctl", "set", "5%-", NULL };
-static const char *screenshot[] = { "sh", "-c", "grim -g \"$(slurp)\" - | satty --filename -", NULL };
+static const char *termcmd[] = {"foot", NULL};
+static const char *menucmd[] = {"rofi", "-show", "drun", NULL};
+static const char *browsercmd[] = {"firefox", NULL};
+static const char *up_vol[] = {"wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@",
+                               "5%+", NULL};
+static const char *down_vol[] = {"wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@",
+                                 "5%-", NULL};
+static const char *mute_vol[] = {"wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@",
+                                 "toggle", NULL};
+static const char *briup[] = {"brightnessctl", "set", "5%+", NULL};
+static const char *bridown[] = {"brightnessctl", "set", "5%-", NULL};
+static const char *screenshot[] = {
+    "sh", "-c", "grim -g \"$(slurp)\" - | satty --filename -", NULL};
 
 static const Key keys[] = {
-    { MODKEY,                    XKB_KEY_Return,      spawn,            {.v = termcmd} },
-    { MODKEY,                    XKB_KEY_d,           spawn,            {.v = menucmd} },
-    { MODKEY,                    XKB_KEY_b,           spawn,            {.v = browsercmd} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_S,           spawn,            {.v = screenshot} },
+    {MODKEY, XKB_KEY_Return, spawn, {.v = termcmd}},
+    {MODKEY, XKB_KEY_d, spawn, {.v = menucmd}},
+    {MODKEY, XKB_KEY_b, spawn, {.v = browsercmd}},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_S, spawn, {.v = screenshot}},
 
-    { MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },
-    { MODKEY,                    XKB_KEY_k,           focusstack,       {.i = -1} },
-    { MODKEY,                    XKB_KEY_i,           incnmaster,       {.i = +1} },
-    { MODKEY,                    XKB_KEY_o,           incnmaster,       {.i = -1} },
-    { MODKEY,                    XKB_KEY_h,           setmfact,         {.f = -0.05f} },
-    { MODKEY,                    XKB_KEY_l,           setmfact,         {.f = +0.05f} },
-    { MODKEY,                    XKB_KEY_space,       zoom,             {0} },
-    { MODKEY,                    XKB_KEY_Tab,         view,             {0} },
-    { MODKEY,                    XKB_KEY_Q,           killclient,       {0} },
+    {MODKEY, XKB_KEY_j, focusstack, {.i = +1}},
+    {MODKEY, XKB_KEY_k, focusstack, {.i = -1}},
+    {MODKEY, XKB_KEY_i, incnmaster, {.i = +1}},
+    {MODKEY, XKB_KEY_o, incnmaster, {.i = -1}},
+    {MODKEY, XKB_KEY_h, setmfact, {.f = -0.05f}},
+    {MODKEY, XKB_KEY_l, setmfact, {.f = +0.05f}},
+    {MODKEY, XKB_KEY_space, zoom, {0}},
+    {MODKEY, XKB_KEY_Tab, view, {0}},
+    {MODKEY, XKB_KEY_q, killclient, {0}},
 
-    { MODKEY,                    XKB_KEY_t,           setlayout,        {.v = &layouts[0]} },
-    { MODKEY,                    XKB_KEY_n,           setlayout,        {.v = &layouts[1]} },
-    { MODKEY,                    XKB_KEY_m,           setlayout,        {.v = &layouts[2]} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,       togglefloating,   {0} },
-    { MODKEY,                    XKB_KEY_f,           togglefullscreen, {0} },
+    {MODKEY, XKB_KEY_t, setlayout, {.v = &layouts[0]}},
+    {MODKEY, XKB_KEY_n, setlayout, {.v = &layouts[1]}},
+    {MODKEY, XKB_KEY_m, setlayout, {.v = &layouts[2]}},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_space, togglefloating, {0}},
+    {MODKEY, XKB_KEY_f, togglefullscreen, {0}},
 
-    { MODKEY,                    XKB_KEY_0,           view,             {.ui = ~0} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright,  tag,              {.ui = ~0} },
+    {MODKEY, XKB_KEY_0, view, {.ui = ~0}},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag, {.ui = ~0}},
 
-    { MODKEY,                    XKB_KEY_comma,       focusmon,         {.i = WLR_DIRECTION_LEFT} },
-    { MODKEY,                    XKB_KEY_period,      focusmon,         {.i = WLR_DIRECTION_RIGHT} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,        tagmon,           {.i = WLR_DIRECTION_LEFT} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,     tagmon,           {.i = WLR_DIRECTION_RIGHT} },
+    {MODKEY, XKB_KEY_comma, focusmon, {.i = WLR_DIRECTION_LEFT}},
+    {MODKEY, XKB_KEY_period, focusmon, {.i = WLR_DIRECTION_RIGHT}},
+    {MODKEY | WLR_MODIFIER_SHIFT,
+     XKB_KEY_less,
+     tagmon,
+     {.i = WLR_DIRECTION_LEFT}},
+    {MODKEY | WLR_MODIFIER_SHIFT,
+     XKB_KEY_greater,
+     tagmon,
+     {.i = WLR_DIRECTION_RIGHT}},
 
-    { 0, XKB_KEY_XF86AudioRaiseVolume,  spawn, {.v = up_vol} },
-    { 0, XKB_KEY_XF86AudioLowerVolume,  spawn, {.v = down_vol} },
-    { 0, XKB_KEY_XF86AudioMute,         spawn, {.v = mute_vol} },
-    { 0, XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = briup} },
-    { 0, XKB_KEY_XF86MonBrightnessDown, spawn, {.v = bridown} },
+    {0, XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = up_vol}},
+    {0, XKB_KEY_XF86AudioLowerVolume, spawn, {.v = down_vol}},
+    {0, XKB_KEY_XF86AudioMute, spawn, {.v = mute_vol}},
+    {0, XKB_KEY_XF86MonBrightnessUp, spawn, {.v = briup}},
+    {0, XKB_KEY_XF86MonBrightnessDown, spawn, {.v = bridown}},
 
-    TAGKEYS(XKB_KEY_1, XKB_KEY_exclam,      0),
-    TAGKEYS(XKB_KEY_2, XKB_KEY_at,          1),
-    TAGKEYS(XKB_KEY_3, XKB_KEY_numbersign,  2),
-    TAGKEYS(XKB_KEY_4, XKB_KEY_dollar,      3),
-    TAGKEYS(XKB_KEY_5, XKB_KEY_percent,     4),
+    TAGKEYS(XKB_KEY_1, XKB_KEY_exclam, 0),
+    TAGKEYS(XKB_KEY_2, XKB_KEY_at, 1),
+    TAGKEYS(XKB_KEY_3, XKB_KEY_numbersign, 2),
+    TAGKEYS(XKB_KEY_4, XKB_KEY_dollar, 3),
+    TAGKEYS(XKB_KEY_5, XKB_KEY_percent, 4),
     TAGKEYS(XKB_KEY_6, XKB_KEY_asciicircum, 5),
-    TAGKEYS(XKB_KEY_7, XKB_KEY_ampersand,   6),
-    TAGKEYS(XKB_KEY_8, XKB_KEY_asterisk,    7),
-    TAGKEYS(XKB_KEY_9, XKB_KEY_parenleft,   8),
+    TAGKEYS(XKB_KEY_7, XKB_KEY_ampersand, 6),
+    TAGKEYS(XKB_KEY_8, XKB_KEY_asterisk, 7),
+    TAGKEYS(XKB_KEY_9, XKB_KEY_parenleft, 8),
 
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_E, quit, {0} },
-    { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT, XKB_KEY_Terminate_Server, quit, {0} },
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_E, quit, {0}},
+    {WLR_MODIFIER_CTRL | WLR_MODIFIER_ALT, XKB_KEY_Terminate_Server, quit, {0}},
 };
 
 static const Button buttons[] = {
-    { MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
-    { MODKEY, BTN_MIDDLE, togglefloating, {0} },
-    { MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+    {ClkLtSymbol, 0, BTN_LEFT, setlayout, {.v = &layouts[0]}},
+    {ClkLtSymbol, 0, BTN_RIGHT, setlayout, {.v = &layouts[2]}},
+    {ClkTitle, 0, BTN_MIDDLE, zoom, {0}},
+    {ClkStatus, 0, BTN_MIDDLE, spawn, {.v = termcmd}},
+    {ClkClient, MODKEY, BTN_LEFT, moveresize, {.ui = CurMove}},
+    {ClkClient, MODKEY, BTN_MIDDLE, togglefloating, {0}},
+    {ClkClient, MODKEY, BTN_RIGHT, moveresize, {.ui = CurResize}},
 };
