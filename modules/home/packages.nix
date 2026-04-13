@@ -2,10 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    fuzzel
     apple-cursor
     rofi
-    somebar
 
     yazi
     tree
@@ -38,7 +36,6 @@
     clippy
     pkg-config
     openssl
-
 
     nur.repos.Ev357.helium
   ];

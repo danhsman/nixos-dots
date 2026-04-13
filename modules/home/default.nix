@@ -6,7 +6,6 @@
     ./cursor.nix
     ./wallpaper.nix
     ./packages.nix
-    ./niri.nix
     ./quickshell.nix
     ./bash.nix
     ./direnv.nix
