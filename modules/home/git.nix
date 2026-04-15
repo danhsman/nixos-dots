@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   programs.git = {
@@ -8,7 +8,7 @@
         name = "danhsman";
         email = "iordageorgiadis@proton.me";
       };
-      
+
       init = {
         defaultBranch = "main";
       };

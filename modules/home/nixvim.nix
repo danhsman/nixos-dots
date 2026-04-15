@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 {
   programs.nixvim = {
     enable = true;
@@ -22,11 +22,11 @@
             local theme = colors.theme
             return {
               Pmenu = { fg = theme.ui.shade0, bg = "NONE" },
-              
+
               PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-              
+
               FloatBorder = { fg = theme.ui.shade0, bg = "NONE" },
-              
+
               NormalFloat = { bg = "NONE" },
             }
           end
@@ -296,4 +296,3 @@
     };
   };
 }
-
