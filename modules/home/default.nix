@@ -3,6 +3,8 @@
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
+    ./hyprland.nix
+    ./waybar.nix
     ./cursor.nix
     ./wallpaper.nix
     ./packages.nix

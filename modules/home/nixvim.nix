@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
@@ -8,33 +7,29 @@
 
     globals.mapleader = " ";
 
-    colorschemes.kanagawa = {
+    # Enable the Oxocarbon colorscheme
+    colorschemes.oxocarbon = {
       enable = true;
-      settings = {
-        theme = "dragon";
-
-        background = {
-          dark = "dragon";
-          light = "lotus";
-        };
-        overrides = ''
-          function(colors)
-            local theme = colors.theme
-            return {
-              Pmenu = { fg = theme.ui.shade0, bg = "NONE" },
-              
-              PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-              
-              FloatBorder = { fg = theme.ui.shade0, bg = "NONE" },
-              
-              NormalFloat = { bg = "NONE" },
-            }
-          end
-        '';
-      };
     };
 
-    colorscheme = "kanagawa";
+    # Override specific highlight groups to add pink accents
+    # and maintain your transparent floating window preferences
+    highlight = {
+      # --- Code Accents ---
+      Keyword = { fg = "#ff7eb6"; };
+      Conditional = { fg = "#ff7eb6"; };
+      Function = { fg = "#ff7eb6"; };
+      Statement = { fg = "#ff7eb6"; };
+
+      # --- UI Accents & Transparent Overrides ---
+      CursorLineNr = { fg = "#ff7eb6"; bold = true; };
+      FloatBorder = { fg = "#ff7eb6"; bg = "NONE"; };
+
+      # Replicates your previous Kanagawa menu styling, but with pink
+      PmenuSel = { bg = "#ff7eb6"; fg = "#161616"; };
+      Pmenu = { bg = "NONE"; };
+      NormalFloat = { bg = "NONE"; };
+    };
 
     opts = {
       wrap = false;
@@ -120,7 +115,6 @@
         action = "<cmd>LazyGit<CR>";
         options.silent = false;
       }
-
     ];
 
     autoCmd = [
@@ -169,7 +163,7 @@
         };
       };
 
-      plugins.direnv.enable = true;
+      direnv.enable = true;
       luasnip.enable = true;
 
       cmp = {
@@ -189,9 +183,7 @@
             "<C-d>" = "cmp.mapping.scroll_docs(-4)";
             "<C-f>" = "cmp.mapping.scroll_docs(4)";
             "<C-e>" = "cmp.mapping.close()";
-
             "<CR>" = "cmp.mapping.confirm({ select = true })";
-
             "<Tab>" = "cmp.mapping.select_next_item()";
             "<S-Tab>" = "cmp.mapping.select_prev_item()";
           };
@@ -252,7 +244,7 @@
         enable = true;
         settings = {
           options = {
-            theme = "kanagawa";
+            theme = "auto";
             icons_enabled = true;
             section_separators = { left = ""; right = ""; };
             component_separators = { left = ""; right = ""; };
@@ -296,4 +288,3 @@
     };
   };
 }
-
